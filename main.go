@@ -32,6 +32,9 @@ func main() {
 		fmt.Println("Logged in as " + client.Me().Tag())
 	})
 
+	// Load command manager :
+	cmdMgr = command.NewCommandManager(client)
+
 	client.On(event.EventMessageCreate, func(msg *discord.Message) {
 		fmt.Println(msg.Content)
 		if msg.Content == "ping" {
