@@ -5,7 +5,6 @@ import (
 
 	"github.com/Goscord/goscord/goscord/discord"
 	"github.com/Goscord/goscord/goscord/gateway"
-	"github.com/Goscord/goscord/goscord/gateway/event"
 )
 
 type CommandManager struct {
@@ -19,16 +18,25 @@ func NewCommandManager(client *gateway.Session) *CommandManager {
 		commands: make(map[string]Command),
 	}
 
-	// Register commands only after bot is ready
-	client.On(event.EventReady, func() {
-		mgr.Init()
-	})
-
 	return mgr
 }
 
 func (mgr *CommandManager) Init() {
+	// // Get all existing commands
+	// commands, err := mgr.client.Application.GetCommands(mgr.client.Me().Id, "")
+	// if err != nil {
+	// 	log.Printf("Error getting commands: %v\n", err)
+	// 	return
+	// }
+
+	// // Delete all existing commands
+	// for _, cmd := range commands {
+	// 	_ = mgr.client.Application.DeleteCommand(mgr.client.Me().Id, "", cmd.Id)
+	// }
+
+	// Register new commands
 	mgr.Register(new(PingCommand))
+	mgr.Register(new(BooruCommand))
 }
 
 func (mgr *CommandManager) Handler(client *gateway.Session) func(*discord.Interaction) {
