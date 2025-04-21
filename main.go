@@ -9,10 +9,15 @@ import (
 	"github.com/Goscord/goscord/goscord/gateway"
 	"github.com/Goscord/goscord/goscord/gateway/event"
 
+	"github.com/NeroQue/QueBot/command"
+
 	"github.com/joho/godotenv"
 )
 
-var client *gateway.Session
+var (
+	client *gateway.Session
+	cmdMgr *command.CommandManager
+)
 
 func main() {
 	fmt.Println("Starting...")
