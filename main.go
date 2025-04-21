@@ -10,6 +10,7 @@ import (
 	"github.com/Goscord/goscord/goscord/gateway/event"
 
 	"github.com/NeroQue/QueBot/command"
+	myEvent "github.com/NeroQue/QueBot/event"
 
 	"github.com/joho/godotenv"
 )
@@ -21,24 +22,33 @@ var (
 
 func main() {
 	fmt.Println("Starting...")
+
+	// Load env :
 	godotenv.Load()
 
-	client := goscord.New(&gateway.Options{
+	// Create client :
+	client = goscord.New(&gateway.Options{
 		Token:   os.Getenv("BOT_TOKEN"),
-		Intents: gateway.IntentGuilds | gateway.IntentGuildMessages | gateway.IntentGuildMembers | gateway.IntentGuildVoiceStates,
+		Intents: gateway.IntentGuilds | gateway.IntentGuildMessages | gateway.IntentGuildMembers | gateway.IntentGuildVoiceStates | gateway.IntentMessageContent,
 	})
 
 	client.On(event.EventReady, func() {
-		fmt.Println("Logged in as " + client.Me().Tag())
+		// Login message is handled in event/ready.go
 	})
 
 	// Load command manager :
 	cmdMgr = command.NewCommandManager(client)
 
+	_ = client.On(event.EventReady, myEvent.OnReady(client, cmdMgr))
+	_ = client.On(event.EventInteractionCreate, cmdMgr.Handler(client))
+	_ = client.On(event.EventGuildMemberAdd, myEvent.OnGuildMemberAdd(client))
+
 	client.On(event.EventMessageCreate, func(msg *discord.Message) {
-		fmt.Println(msg.Content)
 		if msg.Content == "ping" {
-			client.Channel.SendMessage(msg.ChannelId, "Pong ! 🏓")
+			_, err := client.Channel.SendMessage(msg.ChannelId, "Pong ! 🏓")
+			if err != nil {
+				fmt.Printf("Error sending message: %v\n", err)
+			}
 		}
 	})
 

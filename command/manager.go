@@ -1,9 +1,11 @@
 package command
 
 import (
-	"fmt"
+	"log"
+
 	"github.com/Goscord/goscord/goscord/discord"
 	"github.com/Goscord/goscord/goscord/gateway"
+	"github.com/Goscord/goscord/goscord/gateway/event"
 )
 
 type CommandManager struct {
@@ -12,16 +14,22 @@ type CommandManager struct {
 }
 
 func NewCommandManager(client *gateway.Session) *CommandManager {
-	return &CommandManager{
+	mgr := &CommandManager{
 		client:   client,
 		commands: make(map[string]Command),
 	}
+
+	// Register commands only after bot is ready
+	client.On(event.EventReady, func() {
+		mgr.Init()
+	})
+
+	return mgr
 }
 
 func (mgr *CommandManager) Init() {
 	mgr.Register(new(PingCommand))
 }
-
 
 func (mgr *CommandManager) Handler(client *gateway.Session) func(*discord.Interaction) {
 	return func(interaction *discord.Interaction) {
@@ -64,7 +72,7 @@ func (mgr *CommandManager) Register(cmd Command) {
 	}
 
 	if _, err := mgr.client.Application.RegisterCommand(mgr.client.Me().Id, "", appCmd); err != nil {
-		fmt.Println(err)
+		log.Printf("Error registering command %s: %v\n", cmd.Name(), err)
 	}
 
 	mgr.commands[cmd.Name()] = cmd
