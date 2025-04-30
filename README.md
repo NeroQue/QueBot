@@ -10,6 +10,7 @@ A Discord bot built with Go using the Goscord library.
 - Message content monitoring
 - Guild member management
 - Basic ping command
+- Booru image search command (supports Safebooru, Danbooru, and Gelbooru)
 
 ## Prerequisites
 
@@ -52,6 +53,12 @@ go run main.go
 
 ### Command System
 The bot uses a command manager to handle slash commands and interactions.
+
+#### Available Commands
+- `/ping` - Get the bot's latency
+- `/booru` - Search for images on various booru sites
+  - Provider options: Safebooru, Danbooru, Gelbooru
+  - Tag-based search functionality
 
 ### Event Handling
 - Ready event handling

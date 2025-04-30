@@ -5,6 +5,12 @@ go 1.23.4
 require github.com/Goscord/goscord v0.0.0-20240321000613-9e75793b051a
 
 require (
+	github.com/andybalholm/cascadia v1.3.3 // indirect
+	golang.org/x/net v0.39.0 // indirect
+)
+
+require (
+	github.com/PuerkitoBio/goquery v1.10.3
 	github.com/asaskevich/EventBus v0.0.0-20200907212545-49d423059eef // indirect
 	github.com/bytedance/sonic v1.13.2 // indirect
 	github.com/bytedance/sonic/loader v0.2.4 // indirect
